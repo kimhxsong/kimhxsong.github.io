@@ -299,7 +299,7 @@
  ;;  :charge-range    600}   ; Default value: 600
 
  ;; Favorites to list on the left sidebar
- :favorites ["cka" "DD-CN"]
+ :favorites ["DD-CN"]
 
  ;; Set flashcards interval.
  ;; Expected value:
@@ -422,5 +422,4 @@
  :publishing/all-pages-public? true
  :editor/logical-outdenting? true
  :graph/settings {:journal? true
- :builtin-pages? false}
- :journal/page-title-format "MM-dd-yyyy"}
+ :builtin-pages? true}}
