@@ -423,4 +423,5 @@
  :editor/logical-outdenting? true
  :graph/settings {:journal? true
  :builtin-pages? false}
- :journal/page-title-format "MM-dd-yyyy"}
+ :journal/page-title-format "MM-dd-yyyy"
+ :feature/enable-timetracking? false}

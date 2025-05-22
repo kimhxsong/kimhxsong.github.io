@@ -1,4 +1,3 @@
-- [[CKA - Sec. 1. Introduction]]
 - [[CKA - Sec. 2. Core Concepts]]
 - [[CKA - Sec. 3. Scheduling]]
 - [[CKA - Sec. 4. Logging & Monitoring]]
@@ -17,3 +16,22 @@
 - [[CKA - Sec. 17. Lightning Labs]]
 - [[CKA - Sec. 18. Mock Exams]]
 - [[CKA - Sec. 19. Course Conclusion]]
+-
+-
+- 참고자료
+	- https://kubernetes.io/docs/home/
+	- https://fastcampus.co.kr/dev_online_kubemaster
+	- https://www.udemy.com/course/certified-kubernetes-application-developer/?couponCode=CP130525
+-
+- **1. 뭄샤드걸로 기초 개념(강의는 안들어서 잘모르겠는데 굳이 귀찮게 k8s 구축안하고 kodekloud 들어가서 실습하는게 꿀임) **
+- **2. 패스트캠퍼스 보면서 문제유형 파악 **
+- **3. kodekloud ligtning lab이랑 mock exam으로 연습(docs로 검색하면서)**
+- **[출처]** [2024 CKAD 합격 후기](https://blog.naver.com/kimchiudong/223401599255)|**작성자** [우동맨](https://blog.naver.com/kimchiudong)
+-
+-
+- #KodeKloud
+	- Practice Test - PODs
+	- How many pods exist on the system? in the current(default) namespace.
+		- POD?
+		- namespace?
+		-
