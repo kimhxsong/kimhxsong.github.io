@@ -422,7 +422,6 @@
  :publishing/all-pages-public? true
  :editor/logical-outdenting? true
  :graph/settings {:journal? true
- :builtin-pages? false}
+ :builtin-pages? true}
  :journal/page-title-format "MM-dd-yyyy"
- :feature/enable-timetracking? false
- :graph/forcesettings {:charge-range 900}}
+ :feature/enable-timetracking? false}

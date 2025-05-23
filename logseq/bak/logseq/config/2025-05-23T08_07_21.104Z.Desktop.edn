@@ -424,5 +424,4 @@
  :graph/settings {:journal? true
  :builtin-pages? false}
  :journal/page-title-format "MM-dd-yyyy"
- :feature/enable-timetracking? false
- :graph/forcesettings {:charge-range 900}}
+ :feature/enable-timetracking? false}
