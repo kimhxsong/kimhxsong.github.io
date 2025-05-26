@@ -1,0 +1,124 @@
+- #MySQL #SQL
+- ### 1. DATE / DATETIME의 내부 표현
+- DATE: 'YYYY-MM-DD' 형식의 **날짜만** 저장
+- DATETIME: 'YYYY-MM-DD HH:MM:SS' 형식의 **날짜 + 시간** 저장
+- 내부적으로는 숫자 기반으로 비교 가능한 형태로 저장되며, ==문자열이 아니라 시계열 데이터로 취급==됨
+  
+  ---
+- ### 2. 집계 함수에서의 평가 (예: MIN(), MAX(), AVG() 등)
+- MIN(date_column): 가장 **이른(오래된) 날짜** 반환
+- ==MAX(date_column): 가장 **늦은(최근) 날짜** 반환==
+- DATEDIFF(NOW(), date_column) 같이 사용하면:
+	- 반환값은 정수(int): 현재 날짜 기준으로 며칠 차이인지
+	- 이 수치는 클수록 오래된 날짜, 작을수록 최근 날짜 (음수도 가능)
+	  
+	  ```
+	  -- 예: 가장 최근 날짜를 구함
+	  SELECT MAX(date_learned) FROM dog_tricks;
+	  ```
+	  
+	  ---
+- ###  3. 비교 연산에서의 평가 (=,<,>,BETWEEN등)
+- 날짜는 **시간 축을 따라 정렬되는 값**으로 비교됨
+- 예:
+	- =='2023-01-01' < '2023-05-01' → ✅ 참==
+	- '2024-03-21 12:00:00' > '2024-03-21 09:00:00' → ✅ 참
+- **비교 기준**: 값의 크기 비교 (문자열이 아닌 실제 시계열 값)
+  
+  ```
+  -- 특정 날짜 이후 데이터 조회
+  SELECT * FROM events WHERE event_date > '2024-01-01';
+  ```
+  
+  ---
+- ###  4. 날짜 비교 시 DATEDIFF()의 특수성
+- DATEDIFF(date1, date2)는 단순히 date1 - date2의 일(day) 단위 차이
+- **반환값은 정수**
+	- ==> 0이면 date1이 더 미래==
+	- < 0이면 date2가 더 미래
+	  
+	  ```
+	  -- 오늘보다 오래된 데이터만
+	  SELECT * FROM tasks WHERE DATEDIFF(CURDATE(), due_date) > 0;
+	  ```
+	  
+	  > ⚠️ 하지만 집계 함수 안에서 DATEDIFF()를 쓸 경우엔,
+	  
+	  > ==최댓값이 **가장 오래된 날짜**, 최솟값이 **가장 최근 날짜**가 됨!==
+	  
+	  ---
+- ###  5. 날짜 & 시간 비교시 유의사항
+- DATE와 DATETIME을 비교할 경우:
+	- ==DATE는 암묵적으로 00:00:00 시간으로 변환되어 비교됨==
+	- CAST(datetime_col AS DATE)로 명시적 변환도 가능
+	  
+	  ```
+	  -- datetime에서 날짜만 비교하고 싶을 때
+	  WHERE DATE(created_at) = '2025-05-26'
+	  ```
+- ---
+-
+- ## **TIMESTAMPDIFF()**
+- ## ** 사용법 정리**
+- ### **✅ 기본 문법**
+  
+  ```
+  TIMESTAMPDIFF(unit, datetime1, datetime2)
+  ```
+- **unit**: 어떤 단위로 차이를 계산할지 지정 ==(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND 등)==
+- **datetime1**, **datetime2**: 비교할 두 날짜 또는 시간 값
+- **반환값**: 정수 (unit 단위의 차이)
+  
+  > ⚠️ 결과는 ==datetime2 - datetime1의 차이를 계산함==. datetime2가 미래면 양수, 과거면 음수!
+  
+  ---
+- ### **📚 지원 단위 (unit)**
+  
+  | **단위**| **의미**|
+  | ---- | ---- | ---- | ---- | ---- |
+  | FRAC_SECOND| 밀리초 차이 (MySQL 5.6 이상)|
+  | SECOND| 초 차이|
+  | MINUTE| 분 차이|
+  | HOUR| 시간 차이|
+  | DAY| 일(day) 차이|
+  | WEEK| 주 차이|
+  | MONTH| 월 차이|
+  | QUARTER| 분기 차이|
+  | YEAR| 년 차이|
+- ---
+- ### **🧪 예제**
+- #### **1. 두 날짜 사이의 일수 계산**
+  
+  ```
+  SELECT TIMESTAMPDIFF(DAY, '2024-01-01', '2025-01-01'); -- 366 (윤년 포함)
+  ```
+- #### **2. 나이 계산 (생일 기준)**
+  
+  ```
+  SELECT TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) AS age
+  FROM persons;
+  ```
+- #### **3. 가입 후 경과 시간 표시 (시간 단위)**
+  
+  ```
+  SELECT user_id,
+       TIMESTAMPDIFF(HOUR, created_at, NOW()) AS hours_since_signup
+  FROM users;
+  ```
+- #### **4. 분(minute) 차이로 세션 시간 계산**
+  
+  ```
+  SELECT session_id,
+       TIMESTAMPDIFF(MINUTE, start_time, end_time) AS duration_minutes
+  FROM sessions;
+  ```
+  
+  ---
+- ###  DATEDIFF() vs  TIMESTAMPDIFF()
+  
+  | **비교 항목**| DATEDIFF()| TIMESTAMPDIFF()|
+  | ---- | ---- | ---- | ---- | ---- |
+  | 반환 단위| 일(day)만| 선택 가능 (초~년까지)|
+  | 시간 비교| 불가능| 가능 (HOUR, MINUTE, SECOND)|
+  | 사용 예| 단순한 일수 비교| 복잡한 시간차, 나이, 월차, 시간차 등|
+  | 결과 해석 방식| date1 - date2| datetime2 - datetime1 (주의!)|
