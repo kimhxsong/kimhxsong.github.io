@@ -427,4 +427,5 @@
  :feature/enable-timetracking? false
  :graph/forcesettings {:charge-range 1900
  :charge-strength -800
- :link-dist 180}}
+ :link-dist 180}
+ :ui/show-brackets? false}

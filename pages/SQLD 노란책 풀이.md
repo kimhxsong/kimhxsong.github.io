@@ -131,5 +131,19 @@
 		  | 모드       | 실제 SQL FK 기본 동작? | 비고                                         |
 		  | Dependent  | ✅ 기본 동작            | 부모 키 없으면 삽입 실패                     |
 		  | Automatic  | ❌ 기본 미지원          | ORM/트리거/애플리케이션 로직으로 구현 가능   |
-	-
+- DELETE FROM __테이블명__ WHERE ...
+	- DELETE * FROM __테이블명__ 은 문법에 맞지 않다.
 -
+- TRUNCATE TABLE과  DROP TABLE은 로그를 남기지 않는다.
+-
+- DELETE vs. TRUNCATE TABLE
+	- | 항목                   | DELETE                           | TRUNCATE TABLE                                |
+	  | 데이터 삭제 방식        | 한 행씩 삭제                         | 테이블 전체를 빠르게 비움 (bulk remove)         |
+	  | 트랜잭션 로그           | 모든 삭제 로그를 기록                | 최소한의 로그만 기록 (truncate 자체만 기록)     |
+	  | ROLLBACK 가능           | 가능                                 | 가능 (DBMS에 따라 다름*)                        |
+	  | 공간 해제 여부          | ❌ 보통 공간은 그대로 유지            | ✅ ==공간을 해제하고 재사용 가능하게 함==         |
+	  | 제약조건 확인           | FK, CHECK 등 모두 확인               | 제약조건 일부 무시 (예: FK 무시할 수도 있음)    |
+	  | 자동 증가 초기화        | 안 됨                                | ✅ 초기화됨 (MySQL, PostgreSQL 등)               |
+	  | 오토커밋 여부           | ❌ 트랜잭션에 포함 가능               | ✅ 대부분 DBMS에서 오토커밋됨 (주의 필요)         |
+- TRANSACTION ACID
+	- TODO
