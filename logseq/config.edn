@@ -299,7 +299,7 @@
  ;;  :charge-range    600}   ; Default value: 600
 
  ;; Favorites to list on the left sidebar
- :favorites ["cka" "DD-CN"]
+ :favorites ["AWS-SAA CANVAS" "AWS-SAA 시리즈" "cka" "DD-CN"]
 
  ;; Set flashcards interval.
  ;; Expected value:

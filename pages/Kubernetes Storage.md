@@ -1,0 +1,5 @@
+- https://kubernetes.io/docs/concepts/storage/
+- https://gngsn.tistory.com/293
+- https://gngsn.tistory.com/289
+-
+-

@@ -1,0 +1,27 @@
+{:blocks (
+{:block/content "TODO [[mcp-server-config-issue]]"
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "6859498f-49f0-4417-af01-261039e8121b"}
+:block/parent 
+{:block/uuid #uuid "6859498f-49f0-4417-af01-261039e8121b"}
+:block/properties 
+{}
+:block/uuid #uuid "685949a4-d51e-4dd5-9031-89fb6c76afe3"})
+:pages (
+{:block/uuid #uuid "6859498f-49f0-4417-af01-261039e8121b"
+:block/properties 
+{:ls-type :whiteboard-page
+:logseq.tldraw.page 
+{:id "6859498f-49f0-4417-af01-261039e8121b"
+:name "6859498f-49f0-4417-af01-261039e8121b"
+:bindings 
+{}
+:nonce 1
+:assets []
+:shapes-index ()}}
+:block/updated-at 1750682144102
+:block/created-at 1750681999671
+:block/type "whiteboard"
+:block/name "aws-saa canvas"
+:block/original-name "AWS-SAA CANVAS"})}
