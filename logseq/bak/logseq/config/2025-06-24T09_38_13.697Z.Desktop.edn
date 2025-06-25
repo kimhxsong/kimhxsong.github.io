@@ -299,7 +299,7 @@
  ;;  :charge-range    600}   ; Default value: 600
 
  ;; Favorites to list on the left sidebar
- :favorites ["DD-CN"]
+ :favorites ["AWS-SAA CANVAS" "AWS-SAA 시리즈" "cka" "DD-CN"]
 
  ;; Set flashcards interval.
  ;; Expected value:
@@ -422,4 +422,10 @@
  :publishing/all-pages-public? true
  :editor/logical-outdenting? true
  :graph/settings {:journal? true
- :builtin-pages? true}}
+ :builtin-pages? false}
+ :journal/page-title-format "MM-dd-yyyy"
+ :feature/enable-timetracking? false
+ :graph/forcesettings {:charge-range 1900
+ :charge-strength -800
+ :link-dist 180}
+ :ui/show-brackets? false}

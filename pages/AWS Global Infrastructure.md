@@ -1,61 +1,82 @@
+- > {{cards [[AWS Global Infrastructure]] }}
+-
+-
+- ## Q: AWS 글로벌 인프라의 기본 계층 구조는 어떻게 되나요? #card
+	- A: 사용자 → Edge Location (PoP) → AWS Backbone Network → Region → Availability Zone (AZ) 순입니다.
+- ## Q: AWS의 Edge Location이 주로 활용되는 서비스는 무엇인가요? #card
+	- A: CloudFront, Route 53, Global Accelerator 등에서 사용자와 가까운 위치에서 콘텐츠 캐싱 및 DNS 응답을 수행합니다.
+- ## Q: Infrastructure Global Services의 예시는 무엇이며 어떤 특징이 있나요? #card
+	- A: Route 53, CloudFront, IAM, S3 global endpoints 등이 있습니다. 특정 Region에 종속되지 않고 전 세계 어디서든 사용 가능하며, 단일 엔드포인트를 가집니다.
+- ## Q: AWS의 Region과 Availability Zone(AZ)의 관계는 어떻게 되나요? #card
+	- A: Region은 물리적으로 분리된 지리적 영역이며, 각 Region은 고가용성을 위해 최소 3개 이상의 AZ로 구성됩니다. AZ는 독립된 전력, 냉각, 네트워킹을 가진 물리적 데이터센터 클러스터입니다.
+- ## Q: AWS의 Local Zone은 어디에 위치하며 어떤 특징이 있나요? #card
+	- A: 특정 대도시 근처에 있는 AWS 인프라로, 지연에 민감한 애플리케이션을 위해 Region 밖에서 일부 서비스(EC2, EBS 등)를 제공합니다. 해당 Region에 종속됩니다.
+- ## Q: Wavelength Zone의 특징과 사용 목적은 무엇인가요? #card
+	- A: 통신사 5G 기지국 내에 위치한 AWS Zone으로, ultra-low latency(초저지연) 애플리케이션(예: AR/VR, 자율주행)을 위해 사용됩니다. 해당 Region에 종속됩니다.
+- ## Q: AWS Global Backbone Network는 무엇인가요? #card
+	- A: 전 세계의 모든 AWS Region, AZ, Edge Location, Local Zone 등을 연결하는 AWS의 자체 구축 고속 전용 네트워크입니다. 낮은 지연 시간과 높은 처리량을 보장합니다.
+- ## Q: 사용자가 CloudFront를 통해 정적 콘텐츠를 요청할 때의 일반적인 흐름은? #card
+	- A: 사용자 → 가까운 Edge Location (캐시 확인) → (캐시 없으면) AWS Backbone → Origin 서버 (S3/EC2 in Region) → 응답 후 Edge에 캐싱 → 사용자
+- ## Q: 사용자가 EC2에서 운영되는 API 서버를 호출할 때의 흐름은? #card
+	- A: 사용자 → ISP → AWS Global Backbone → 대상 Region → 해당 AZ (EC2 인스턴스)
+- ## Q: AWS 데이터 전송 비용 정책에서 동일 AZ 내부 통신 시 비용은 얼마인가요? #card
+	- A: $0 (무료)입니다.
+- ## Q: AWS 데이터 전송 비용 정책에서 다른 AZ 간 통신 시 비용은 얼마인가요? #card
+	- A: $0.01/GB (양방향)입니다.
+- ## Q: AWS 데이터 전송 비용 정책에서 다른 Region 간 통신 시 비용은 얼마인가요? #card
+	- A: $0.02/GB (송신 리전 기준)입니다.
+- ## Q: AWS에서 인터넷으로 나가는 트래픽의 기본 요금은 얼마이며, 무료인 경우는 언제인가요? #card
+	- A: 첫 10TB/월 기준 $0.09/GB이며, 인터넷에서 AWS로 들어오는 트래픽과 CloudFront에서 Origin으로의 트래픽은 무료입니다.
+- ## Q: AWS 아키텍처 설계 시 비용 최적화를 위한 주요 원칙 중 '같은 AZ 우선 배치'는 어떤 상황에 적합한가요? #card
+	- A: 개발/테스트 환경, 비용 민감 워크로드, 짧은 다운타임 허용 가능 시에 적합하며, 자주 통신하는 리소스를 동일 AZ에 배치하여 데이터 전송 비용을 무료로 만듭니다.
+- ## Q: 고가용성을 위해 프로덕션 데이터베이스에 권장되는 AZ 구성은 무엇인가요? #card
+	- A: Multi-AZ 구성이 필수적입니다.
+	- 예를 들어 **RDS (Relational Database Service)**의 Multi-AZ 배포 옵션을 활성화하면:
+		- **하나의 리전 내의 서로 다른 두 AZ**에 Primary와 Standby 인스턴스를 구성합니다.
+		- AZ 하나에 장애가 발생해도 다른 AZ의 Standby 인스턴스로 자동 Failover 됩니다.
+- ## Q: AWS 비용 최적화를 위해 인터넷 게이트웨이를 우회하는 방법은 무엇인가요? #card
+	- A: S3/DynamoDB VPC Endpoint를 활용하여 데이터 전송 비용을 절감하고 보안을 향상시킬 수 있습니다.
+- ## Q: AWS에서 정적 콘텐츠 배포 및 Origin 트래픽 감소를 위해 주로 활용되는 서비스는? #card
+	- A: CloudFront (CDN)입니다.
+-
 - https://claude.ai/public/artifacts/4c047de4-c21f-416f-9865-4ce52a9d8776
 -
-- {{cards [[AWS Infrastructure]] }}
 -
 -
-- Q: AWS의 Edge Location이 주로 활용되는 서비스는 무엇인가요? #card
-	- CloudFront, Route 53, Global Accelerator 등에서 사용자와 가까운 위치에서 콘텐츠 캐싱 및 DNS 응답을 수행합니다.
-- Q: AWS의 Region과 Availability Zone의 관계는? #card
-	- A: Region은 물리적으로 분리된 지리적 영역이며, 각 Region은 다수의 Availability Zone(AZ)으로 구성됩니다. AZ는 독립적인 전력, 네트워크 인프라를 가진 데이터 센터입니다.
-- Q: AWS의 Local Zone은 어디에 위치하며 어떤 특징이 있나요? #card
-	- A: Local Zone은 대도시 근처에 위치한 AWS 인프라로, 지연을 줄이기 위해 Region 밖에서 일부 서비스(EC2, EBS 등)를 제공합니다. Region에 종속됩니다.
-- Q: Wavelength Zone의 특징과 사용 목적은? #card
-	- A: Wavelength Zone은 통신사 5G 네트워크 내에 구축된 AWS Zone으로, ultra-low latency 애플리케이션(예: AR/VR, 자율주행)을 위해 사용되며 Region에 종속됩니다.
-- Q: 사용자가 CloudFront를 통해 정적 콘텐츠를 요청할 때의 흐름은? #card
-	- A: 사용자 → 가까운 Edge Location → 캐시 여부 확인 → 없으면 AWS Backbone → Origin 서버 (예: S3 or EC2 in Region)
-- Q: 사용자가 EC2에서 운영되는 API 서버를 호출할 때 흐름은? #card
-	- A: 사용자 → ISP → AWS Global Backbone → 대상 Region → 해당 AZ (EC2 인스턴스)
-- Q: AWS의 Global Backbone Network란 무엇인가요? #card
-	- A: 전 세계 Region, AZ, Edge Location, Local Zone 등을 연결하는 AWS의 고속 전용 네트워크입니다.
-- Q: Infrastructure Global Services의 예시는 무엇이며 어떤 특징이 있나요? #card
-	- A: Route 53, IAM, CloudFront 등이 있으며, 특정 Region에 종속되지 않고 전 세계 어디서든 사용할 수 있습니다.
-- Q: Wavelength Zone은 어떤 통신 인프라 위에 위치하나요? #card
-	- A: 5G 통신사의 기지국 인프라 내에 위치하여 초저지연 처리를 가능하게 합니다.
-- Q: Edge Location과 Local Zone의 가장 큰 차이점은? #card
-	- A: Edge Location은 CDN 캐싱 및 DNS 응답을 위한 프록시 노드이고, Local Zone은 일부 AWS 컴퓨팅 리소스를 실제로 운영할 수 있는 인프라입니다.
--
-- ## **🌐 AWS Global Infrastructure 구성 요소 정리**
-	- |   **구성 요소**   |   **설명**   |
-	  | --- | --- |
-	  |   **Infrastructure Global Services**   |   Route 53, CloudFront, IAM, S3 global endpoints 등 리전 독립적으로 전 세계에서 사용 가능한 서비스   |
-	  |   **Edge Location**   |   사용자에게 가장 가까운 AWS 지점 (CloudFront, Route 53, Global Accelerator 등 사용)   |
-	  |   **Local Zone**   |   특정 도시에 있는 AWS 인프라로, 일부 리전 서비스(AWS::EC2, EBS 등)만 지원하며 Region에 종속됨   |
-	  |   **Wavelength Zone**   |   통신사 5G 기지국에 위치한 Zone으로 ultra-low latency 앱을 위해 사용됨, Region에 종속   |
-	  |   **Region**   |   지리적으로 구분된 AWS 리소스 배포 단위. 일반적으로 여러 Availability Zone 포함   |
-	  |   **Availability Zone (AZ)**   |   Region 내의 물리적 데이터 센터. 고가용성과 장애 격리를 위해 구성됨   |
-	- ---
-- ## **📡 요청 흐름 예시 (서비스 종류에 따라 다름)**
-	- |   **요청 유형**   |   **흐름**   |
-	  | --- | --- |
-	  |   **CloudFront (정적 콘텐츠)**   |   사용자 → Edge Location → 캐시 확인 → (없으면) AWS Backbone → Origin (S3/EC2 in Region)   |
-	  |   **Route 53 (DNS)**   |   사용자 → Edge Location → Route 53 응답 → 대상 IP 반환   |
-	  |   **EC2 호출 (API 등)**   |   사용자 → ISP → AWS Backbone → Region → AZ (EC2)   |
-	  |   **Wavelength Zone 앱 호출**   |   사용자(5G) → 통신망 → Wavelength Zone (AWS Infra)   |
-	  |   **Local Zone 사용 앱 호출**   |   사용자 → 가까운 Local Zone → Region으로 백업 전송 필요 시 AWS Backbone 통해 전달   |
--
-- # AWS Global Infrastructure 완벽 가이드
-	- ## 1. AWS 인프라 계층 구조
-		- ### 🌍 전체 구조
+- # AWS 글로벌 인프라 종합 가이드
+	- 이 문서는 AWS의 글로벌 인프라 구성 요소를 이해하고, 다양한 서비스 요청이 어떻게 처리되는지, 그리고 관련 비용 정책과 최적화 전략을 종합적으로 설명합니다.
+	- ## 1. AWS 인프라 계층 구조 및 구성 요소
+		- AWS의 글로벌 인프라는 계층적인 구조를 가지며, 전 세계 사용자에게 낮은 지연 시간과 높은 가용성을 제공하도록 설계되었습니다.
+		- ### 1.1. 전체 구조 개요
 			- ```
 			  ┌─────────────────────────────────────────────────────────┐
 			  │                    AWS Global Network                    │
 			  ├─────────────────────────────────────────────────────────┤
-			  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │
-			  │  │   Region    │  │   Region    │  │   Region    │    │
-			  │  │  (도쿄)     │  │  (서울)     │  │  (싱가포르) │    │
-			  │  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘    │
-			  │         │                 │                 │           │
-			  │  ┌──────▼──────────────────▼──────────────▼─────┐     │
+			  │  ┌───────────────────────────────────────────────────┐  │
+			  │  │                     Region (도쿄)                   │  │
+			  │  │  ┌─────────┐  ┌─────────┐  ┌─────────┐            │  │
+			  │  │  │   AZ-1a │  │   AZ-1b │  │   AZ-1c │◀───Local Zone (도쿄 근처)│  │
+			  │  │  └────┬────┘  └────┬────┘  └────┬────┘            │  │
+			  │  │       │            │            │                  │  │
+			  │  └───────┼────────────┼────────────┼──────────────────┘  │
+			  │          │            │            │                     │
+			  │  ┌───────────────────────────────────────────────────┐  │
+			  │  │                     Region (서울)                   │  │
+			  │  │  ┌─────────┐  ┌─────────┐  ┌─────────┐            │  │
+			  │  │  │   AZ-2a │  │   AZ-2b │  │   AZ-2c │◀───Wavelength Zone (5G 기지국)│  │
+			  │  │  └────┬────┘  └────┬────┘  └────┬────┘            │  │
+			  │  │       │            │            │                  │  │
+			  │  └───────┼────────────┼────────────┼──────────────────┘  │
+			  │          │            │            │                     │
+			  │  ┌───────────────────────────────────────────────────┐  │
+			  │  │                   Region (싱가포르)                 │  │
+			  │  │  ┌─────────┐  ┌─────────┐  ┌─────────┐            │  │
+			  │  │  │   AZ-3a │  │   AZ-3b │  │   AZ-3c │            │  │
+			  │  │  └────┬────┘  └────┬────┘  └────┬────┘            │  │
+			  │  │       │            │            │                  │  │
+			  │  └───────┼────────────┼────────────┼──────────────────┘  │
+			  │          │            │            │                     │
+			  │  ┌───────▼──────────────────▼──────────────▼───────────┐ │
 			  │  │            AWS Backbone Network               │     │
 			  │  └───────────────────────────────────────────────┘     │
 			  │                                                         │
@@ -65,75 +86,84 @@
 			  │  └─────────────┘  └─────────────┘  └─────────────┘    │
 			  └─────────────────────────────────────────────────────────┘
 			  ```
-	- ## 2. 각 구성 요소 상세
-		- ### 📍 Region (리전)
-			- **정의**: 물리적으로 분리된 지리적 영역
-			- **현재**: 33개 리전 (2025년 기준)
-			- **구성**: 최소 3개 이상의 AZ로 구성
-			- **특징**:
-			  collapsed:: true
-				- 완전히 독립적인 인프라
-				- 리전 간 데이터 복제는 명시적으로만 가능
-				- 대부분의 서비스는 리전 단위로 제공
-		- ### 🏢 Availability Zone (가용 영역)
-			- **정의**: 하나 이상의 독립적인 데이터센터 클러스터
-			- **구성**:
-			  collapsed:: true
-				- 각 AZ는 독립된 전력, 냉각, 네트워킹
-				- AZ 간 거리: 수십 km (저지연 연결)
-				- 물리적으로 분리되어 있지만 고속 전용선으로 연결
-		- ### 🏭 Data Center
-			- **정의**: 실제 서버가 위치한 물리적 시설
-			- **구성**:
-			  collapsed:: true
-				- 수천~수만 대의 서버
-				- 이중화된 전력 및 네트워킹
-				- 24/7 보안 및 모니터링
-		- ### 🌐 Edge Location / PoP (Points of Presence)
-			- **정의**: CDN 및 가속화 서비스를 위한 캐시 서버 위치
-			- **현재**: 600+ 엣지 로케이션
-			- **서비스**: CloudFront, Route 53, Global Accelerator
-			- **특징**: 사용자와 가장 가까운 위치에서 콘텐츠 제공
-	- ## 3. 서비스 범위별 분류
-		- ### 🌏 Global Services (리전 독립적)
+		- ### 1.2. 주요 구성 요소 상세 설명
+			- |   구성 요소   |   설명   |
+			  | --- | --- |
+			  |   **Region (리전)**   |   물리적으로 분리된 지리적 영역 (2025년 기준 33개 리전). 고가용성을 위해 최소 3개 이상의 AZ로 구성되며, 대부분의 서비스가 리전 단위로 제공됩니다. 리전 간 데이터 복제는 명시적으로 설정해야 합니다.   |
+			  |   **Availability Zone (AZ)**   |   리전 내의 하나 이상의 독립적인 데이터센터 클러스터. 독립된 전력, 냉각, 네트워킹을 가지며, AZ 간 수십 km 거리로 분리되어 고속 전용선으로 연결됩니다. 높은 가용성과 장애 격리를 목표로 합니다.   |
+			  |   **Data Center (데이터 센터)**   |   실제 서버가 위치한 물리적 시설. 수천~수만 대의 서버와 이중화된 전력, 네트워킹, 24/7 보안 및 모니터링 시스템을 갖춥니다.   |
+			  |   **Edge Location / PoP**   |   CDN 및 가속화 서비스를 위한 캐시 서버 위치 (600개 이상). 사용자와 가장 가까운 지점에서 CloudFront, Route 53, Global Accelerator 등을 통해 콘텐츠 캐싱 및 DNS 응답을 제공하여 지연 시간을 줄입니다.   |
+			  |   **Local Zone (로컬 존)**   |   특정 대도시 근처에 있는 AWS 인프라로, 일부 리전 서비스(EC2, EBS 등)만 지원합니다. 지연에 민감한 애플리케이션을 위해 사용되며, 해당 리전에 종속됩니다.   |
+			  |   **Wavelength Zone (웨이블랭스 존)**   |   통신사 5G 기지국 내에 위치한 Zone으로, ultra-low latency(초저지연) 애플리케이션(AR/VR, 자율주행 등)을 위해 사용됩니다. 해당 리전에 종속됩니다.   |
+			  |   **Infrastructure Global Services**   |   Route 53, CloudFront, IAM, S3 global endpoints 등 특정 리전에 종속되지 않고 전 세계 어디서든 사용할 수 있는 서비스입니다.   |
+			  |   **AWS Global Backbone Network**   |   전 세계의 모든 AWS Region, AZ, Edge Location, Local Zone 등을 연결하는 AWS의 자체 구축 고속 전용 네트워크입니다. 낮은 지연 시간과 높은 처리량을 보장합니다.   |
+	- ## 2. 서비스 범위별 분류
+		- AWS 서비스는 그 활용 범위에 따라 크게 세 가지로 분류할 수 있습니다.
+		- ### 2.1. 글로벌 서비스 (리전 독립적)
+			- **설명**: 특정 리전 선택 없이 전 세계에서 동일하게 작동하며, 단일 엔드포인트를 가집니다.
+			- **예시**: IAM (Identity and Access Management), Route 53 (DNS), CloudFront (CDN), WAF (Web Application Firewall), Global Accelerator.
+		- ### 2.2. 리전별 서비스 (리전 범위)
+			- **설명**: 대부분의 AWS 서비스가 여기에 해당하며, 리전별로 독립적으로 운영됩니다. 리소스 ID는 리전별로 고유하며, 리전 간 복제는 명시적 설정이 필요합니다.
+			- **예시**: EC2, RDS, S3 (버킷은 리전 기반), VPC, Lambda, ECS/EKS, DynamoDB, ElastiCache, SQS, SNS, Kinesis.
+		- ### 2.3. AZ 레벨 리소스
+			- **설명**: 특정 AZ에 고정되는 리소스로, 해당 AZ에 장애 발생 시 영향을 받을 수 있습니다. 고가용성을 위해서는 Multi-AZ 구성이 필요합니다.
+			- **예시**: EC2 인스턴스, EBS 볼륨, RDS 인스턴스 (Multi-AZ 구성이 아닌 경우), 서브넷.
+	- ## 3. 요청 흐름 예시 (서비스 종류에 따라 다름)
+		- 사용자 요청은 서비스 유형과 설정에 따라 다양한 경로를 통해 처리됩니다.
+		- ### 3.1. CloudFront (정적 콘텐츠)
 			- ```
-			  완전한 글로벌 서비스:
-			  - IAM (Identity and Access Management)
-			  - Route 53 (DNS)
-			  - CloudFront (CDN)
-			  - WAF (Web Application Firewall)
-			  - Global Accelerator
-			  특징:
-			  - 단일 엔드포인트
-			  - 모든 리전에서 동일하게 작동
-			  - 리전 선택 불필요
+			  [사용자]
+			        ↓ 요청
+			  [가까운 Edge Location (캐시 확인)]
+			        ├─> [캐시 있음] ─> [사용자 (응답)]
+			        └─> [캐시 없음]
+			                         ↓ 요청
+			                       [AWS Backbone]
+			                         ↓
+			                       [Origin (S3/EC2 in Region)]
+			                         ↓ 응답
+			                       [AWS Backbone]
+			                         ↓
+			                       [Edge Location (캐싱)]
+			                         ↓ 응답
+			                       [사용자]
 			  ```
-		- ### 🏛️ Regional Services (리전 범위)
+		- ### 3.2. Route 53 (DNS)
+			- `[사용자] → [Edge Location] → [Route 53 응답] → [대상 IP 반환]`
+		- ### 3.3. EC2 호출 (API 등)
+			- `[사용자] → [ISP] → [AWS Global Backbone] → [대상 Region] → [해당 AZ (EC2 인스턴스)]`
+		- ### 3.4. Wavelength Zone 앱 호출
+			- `[사용자(5G)] → [통신망] → [Wavelength Zone (AWS Infra)]`
+		- ### 3.5. Local Zone 사용 앱 호출
+			- `[사용자] → [가까운 Local Zone] → [Region으로 백업 전송 필요 시 AWS Backbone 통해 전달]`
+		- ### 3.6. 복잡한 다중 리전 서비스 흐름 (예: 미국 사용자 → 서울 웹 서버 → 도쿄 DB → 유럽 사용자)
 			- ```
-			  대부분의 AWS 서비스:
-			  - EC2, RDS, S3
-			  - VPC, Lambda, ECS/EKS
-			  - DynamoDB, ElastiCache
-			  - SQS, SNS, Kinesis
-			  특징:
-			  - 리전별로 독립적으로 운영
-			  - 리전 간 복제는 명시적 설정 필요
-			  - 리소스 ID는 리전별로 고유
+			  [미국 사용자]
+			           ↓ 요청
+			  [미국 Edge Location]
+			           ↓
+			  [AWS Backbone]
+			           ↓
+			  [서울 Region - AZ (웹 서버)]
+			           ↓ DB 요청
+			  [AWS Backbone]
+			           ↓
+			  [도쿄 Region (DB)]
+			           ↓ DB 응답
+			  [AWS Backbone]
+			           ↓
+			  [서울 Region - AZ (웹 서버)]
+			           ↓ 최종 응답
+			  [AWS Backbone]
+			           ↓
+			  [유럽 Edge Location]
+			           ↓ 응답
+			  [유럽 사용자]
 			  ```
-		- ### 🏗️ AZ-Scoped Resources
-			- ```
-			  AZ 레벨 리소스:
-			  - EC2 인스턴스
-			  - EBS 볼륨
-			  - RDS 인스턴스 (Multi-AZ 아닌 경우)
-			  - 서브넷
-			  특징:
-			  - 특정 AZ에 고정
-			  - AZ 장애 시 영향 받음
-			  - 고가용성을 위해 Multi-AZ 구성 필요
-			  ```
+			- **참고**: 'AZ (서비스 요청 발생) → Region (라우팅/게이트웨이) → AWS Backbone → Edge Location (전송 최적화 지점) → Backbone → 다른 Edge Location (사용자 가까움) → Backbone → 최종 Region/AZ (결과 또는 다른 서비스 연계)'와 같은 매우 복잡한 흐름은 글로벌 CDN, 백엔드 마이크로서비스 간의 통신, 또는 복잡한 B2B API 통합 시나리오에서 발생할 수 있습니다.
 	- ## 4. 네트워크 통신 및 과금 정책
-		- ### 💰 데이터 전송 비용 구조
+		- AWS는 데이터 전송량에 따라 비용을 부과하며, 통신 위치에 따라 요금이 달라집니다.
+		- ### 4.1. 데이터 전송 비용 구조 다이어그램
 			- ```
 			  ┌─────────────────────────────────────────────────────────┐
 			  │                    비용 구조 다이어그램                   │
@@ -154,60 +184,20 @@
 			  │  │  Seoul  │────▶│  Tokyo  │                          │
 			  │  └─────────┘     └─────────┘                          │
 			  │                                                         │
-			  │  인터넷으로 나가는 트래픽: $0.09/GB                    │
+			  │  인터넷으로 나가는 트래픽: $0.09/GB (티어별 상이)       │
 			  │  ┌─────────┐     ┌─────────┐                          │
 			  │  │   AWS   │────▶│Internet │                          │
 			  │  └─────────┘     └─────────┘                          │
 			  └─────────────────────────────────────────────────────────┘
 			  ```
-		- ### 📊 상세 과금 정책
-			- #### 1. **동일 AZ 내부 통신**
-			  collapsed:: true
-				- ```
-				  비용: 무료
-				  예시:
-				  - EC2 → RDS (같은 AZ)
-				  - EC2 → EC2 (같은 AZ)
-				  - EC2 → ElastiCache (같은 AZ)
-				  권장사항:
-				  - 자주 통신하는 리소스는 같은 AZ에 배치
-				  - 단, 고가용성 고려 필요
-				  ```
-			- #### 2. **Cross-AZ 통신**
-			  collapsed:: true
-				- ```
-				  비용: $0.01/GB (양방향)
-				  예시:
-				  - EC2(AZ-1a) → RDS(AZ-1b)
-				  - ELB가 다른 AZ의 인스턴스로 트래픽 분산
-				  권장사항:
-				  - Multi-AZ 구성 시 비용 고려
-				  - 고가용성 vs 비용 트레이드오프
-				  ```
-			- #### 3. **Cross-Region 통신**
-			  collapsed:: true
-				- ```
-				  비용: $0.02/GB (송신 리전 기준)
-				  예시:
-				  - S3(Seoul) → EC2(Tokyo)
-				  - RDS Read Replica 복제
-				  권장사항:
-				  - 꼭 필요한 경우만 Cross-Region 구성
-				  - S3 Cross-Region Replication 비용 주의
-				  ```
-			- #### 4. **인터넷 아웃바운드**
-			  collapsed:: true
-				- ```
-				  비용: 
-				  - 첫 10TB/월: $0.09/GB
-				  - 다음 40TB/월: $0.085/GB
-				  - 그 이상: 협상 가능
-				  무료:
-				  - 인터넷에서 AWS로 들어오는 트래픽
-				  - CloudFront에서 Origin으로의 트래픽
-				  ```
+		- ### 4.2. 상세 과금 정책
+			- 1.  **동일 AZ 내부 통신**: 비용은 **무료**입니다. 자주 통신하는 리소스는 같은 AZ에 배치하는 것이 비용 효율적입니다. (예: EC2 → RDS, EC2 → EC2, EC2 → ElastiCache)
+			- 2.  **Cross-AZ 통신**: 비용은 **$0.01/GB (양방향)**입니다. Multi-AZ 구성 시 고가용성과 비용 간의 트레이드오프를 고려해야 합니다. (예: EC2(AZ-1a) → RDS(AZ-1b), ELB가 다른 AZ의 인스턴스로 트래픽 분산)
+			- 3.  **Cross-Region 통신**: 비용은 **$0.02/GB (송신 리전 기준)**입니다. 꼭 필요한 경우에만 Cross-Region 구성을 고려하며, S3 Cross-Region Replication 비용에 유의해야 합니다. (예: S3(Seoul) → EC2(Tokyo), RDS Read Replica 복제)
+			- 4.  **인터넷 아웃바운드**: 비용은 첫 10TB/월 기준 **$0.09/GB**이며, 그 이상은 티어별로 감소합니다. 인터넷에서 AWS로 들어오는 트래픽과 CloudFront에서 Origin으로의 트래픽은 **무료**입니다.
 	- ## 5. 아키텍처 패턴별 통신 흐름
-		- ### 🏗️ Single Region, Multi-AZ 패턴
+		- ### 5.1. Single Region, Multi-AZ 패턴
+			- 단일 리전 내에서 여러 AZ를 활용하여 고가용성을 확보하는 패턴입니다.
 			- ```
 			  ┌─────────────────── Region: ap-northeast-2 ──────────────────┐
 			  │                                                              │
@@ -224,7 +214,8 @@
 			  │                           ($0.01/GB each way)               │
 			  └──────────────────────────────────────────────────────────────┘
 			  ```
-		- ### 🌏 Multi-Region 패턴
+		- ### 5.2. Multi-Region 패턴
+			- 여러 리전을 사용하여 전역적인 가용성과 재해 복구 능력을 강화하는 패턴입니다.
 			- ```
 			  ┌──── Region: Seoul ────┐         ┌──── Region: Tokyo ────┐
 			  │                       │         │                       │
@@ -239,67 +230,34 @@
 			          Cross-Region Replication: $0.02/GB
 			  ```
 	- ## 6. 비용 최적화 전략
-		- ### 💡 아키텍처 설계 원칙
-			- collapsed:: true
-			  1.  **같은 AZ 우선 배치**
-				- ```
-				      적합한 경우:
-				      - 개발/테스트 환경
-				      - 비용 민감한 워크로드
-				      - 짧은 다운타임 허용 가능
-				    ```
-			- collapsed:: true
-			  2.  **선택적 Multi-AZ**
-				- ```
-				      Multi-AZ 필수:
-				      - 프로덕션 데이터베이스
-				      - 중요 비즈니스 애플리케이션
-				      Single-AZ 고려:
-				      - 개발 환경
-				      - 배치 처리 시스템
-				      - 재생성 가능한 워크로드
-				    ```
-			- collapsed:: true
-			  3.  **VPC Endpoint 활용**
-				- ```
-				      S3/DynamoDB VPC Endpoint:
-				      - 인터넷 게이트웨이 우회
-				      - 데이터 전송 비용 절감
-				      - 보안 향상
-				    ```
-			- collapsed:: true
-			  4.  **CDN 활용**
-				- ```
-				      CloudFront 사용:
-				      - 정적 콘텐츠는 엣지에서 제공
-				      - Origin 트래픽 감소
-				      - 전체 비용 절감
-				    ```
-	- ## 7. 실전 예시: 전자상거래 사이트
-		- ### 🛒 비용 효율적인 아키텍처
-			- ```
-			  구성:
-			  - Web Servers: 3개 AZ에 분산 (고가용성)
-			  - Database: RDS Multi-AZ (필수)
-			  - Cache: ElastiCache - Web Server와 같은 AZ (비용 절감)
-			  - Static Assets: S3 + CloudFront (글로벌 배포)
-			  월간 데이터 전송 예상:
-			  - Same AZ (Cache): 1TB × $0 = $0
-			  - Cross AZ (DB): 100GB × $0.01 × 2 = $2
-			  - Internet Out: 500GB × $0.09 = $45
-			  - 총 전송 비용: ~$47/월
-			  ```
-	- ## 8. 주요 체크리스트
-		- ### ✅ 설계 시 고려사항
-			- [ ] 고가용성 요구사항 정의
-			- [ ] 데이터 전송 패턴 분석
-			- [ ] 비용 vs 가용성 트레이드오프
-			- [ ] 규정 준수 (데이터 레지던시)
-			- [ ] 재해 복구 요구사항
-			- [ ] 글로벌 사용자 분포
-		- ### 📈 모니터링 포인트
-			- VPC Flow Logs로 트래픽 패턴 분석
-			- Cost Explorer로 데이터 전송 비용 추적
-			- CloudWatch로 Cross-AZ 트래픽 모니터링
-			- AWS Cost Anomaly Detection 활성화
+		- 데이터 전송 비용은 AWS 운영 비용의 상당 부분을 차지할 수 있으므로, 아키텍처 설계 단계부터 비용 효율성을 고려해야 합니다.
+		- ### 6.1. 아키텍처 설계 원칙
+			- **같은 AZ 우선 배치**: 개발/테스트 환경, 비용 민감 워크로드, 짧은 다운타임 허용 가능 시 자주 통신하는 리소스를 동일 AZ에 배치하여 데이터 전송 비용을 무료로 만듭니다.
+			- **선택적 Multi-AZ**: 프로덕션 데이터베이스나 중요 비즈니스 애플리케이션에는 Multi-AZ 구성이 필수적이지만, 개발 환경이나 배치 처리 시스템 등 재생성 가능한 워크로드에는 Single-AZ를 고려하여 비용을 절감할 수 있습니다.
+			- **VPC Endpoint 활용**: S3/DynamoDB VPC Endpoint를 사용하여 인터넷 게이트웨이를 우회하면 데이터 전송 비용을 절감하고 보안을 향상시킬 수 있습니다.
+			- **CDN 활용**: CloudFront를 사용하여 정적 콘텐츠를 엣지 로케이션에서 제공하면 Origin 트래픽을 감소시키고 전체 비용을 절감할 수 있습니다.
+		- ### 6.2. 실전 예시: 전자상거래 사이트의 비용 효율적인 아키텍처
+			- **구성**:
+				- **웹 서버**: 3개 AZ에 분산하여 고가용성 확보
+				- **데이터베이스**: RDS Multi-AZ 구성 (필수)
+				- **캐시**: ElastiCache는 웹 서버와 같은 AZ에 배치하여 비용 절감
+				- **정적 자산**: S3와 CloudFront를 결합하여 글로벌 배포
+			- **월간 데이터 전송 예상**:
+				- Same AZ (Cache): 1TB times $0 = $0
+				- Cross AZ (DB): 100GB times $0.01 \times 2 = $2 (양방향)
+				- Internet Out: 500GB times $0.09 = $45
+				- **총 전송 비용**: 약 $47/월
+	- ## 7. 주요 체크리스트
+		- ### 7.1. 설계 시 고려사항
+			- 고가용성 요구사항 정의
+			- 데이터 전송 패턴 분석 (어떤 서비스 간에 얼마나 많은 데이터가 오가는지)
+			- 비용 vs 가용성 트레이드오프 분석
+			- 규정 준수 (데이터 레지던시 등)
+			- 재해 복구 요구사항 정의
+			- 글로벌 사용자 분포 분석
+		- ### 7.2. 모니터링 포인트
+			- **VPC Flow Logs**: 트래픽 패턴 분석을 통해 불필요한 데이터 전송을 파악합니다.
+			- **Cost Explorer**: AWS 비용을 추적하고, 특히 데이터 전송 비용을 상세히 분석합니다.
+			- **CloudWatch**: Cross-AZ 트래픽을 모니터링하여 예상치 못한 비용 증가를 감지합니다.
+			- **AWS Cost Anomaly Detection**: 비용 이상 징후를 자동으로 감지하도록 활성화합니다.
 -

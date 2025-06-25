@@ -420,7 +420,7 @@
  ;;      ;use Percent-encoding for other invalid characters
  :file/name-format :triple-lowbar
  :publishing/all-pages-public? true
- :editor/logical-outdenting? true
+ :editor/logical-outdenting? false
  :graph/settings {:journal? true
  :builtin-pages? false}
  :journal/page-title-format "MM-dd-yyyy"
